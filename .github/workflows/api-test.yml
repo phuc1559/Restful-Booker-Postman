@@ -12,26 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: action/checkout@v5
+        uses: actions/checkout@v5
 
-      - name: Set up Nodejs
-        uses: action/setup-nodejs@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
         with:
           node-version: 22
-      - name: Install newman
-        uses: npm install -g newman
 
-      - name: Run newman
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Newman
         run: |
-          newman run "postman/Restful-Booker.postman_collection.json" -e "postman/Restful-Booker.postman_environment.json" --folder "CRUD Flow" --reporter cli,junit --reporter-junit-export newman-result/junit.xml
-      
-      - name: Upload Result 
+          newman run "postman/Restful-Booker.postman_collection.json" -e "postman/Restful-Booker.postman_environment.json" --folder "CRUD Flow" --reporters cli,junit --reporter-junit-export newman-results/junit.xml
+
+      - name: Upload Result
         if: always()
-        uses: action/upload-artifact@v4
-        with: 
+        uses: actions/upload-artifact@v4
+        with:
           name: newman-results
           path: newman-results/
-          
 
 
 
