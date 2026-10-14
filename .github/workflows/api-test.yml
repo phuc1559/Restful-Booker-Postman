@@ -1,0 +1,39 @@
+name: API-Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  newman:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: action/checkout@v5
+
+      - name: Set up Nodejs
+        uses: action/setup-nodejs@v5
+        with:
+          node-version: 22
+      - name: Install newman
+        uses: npm install -g newman
+
+      - name: Run newman
+        run: |
+          newman run "postman/Restful-Booker.postman_collection.json" -e "postman/Restful-Booker.postman_environment.json" --folder "CRUD Flow" --reporter cli,junit --reporter-junit-export newman-result/junit.xml
+      
+      - name: Upload Result 
+        if: always()
+        uses: action/upload-artifact@v4
+        with: 
+          name: newman-results
+          path: newman-results/
+          
+
+
+
+        
+         
